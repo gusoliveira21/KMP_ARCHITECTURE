@@ -1,14 +1,14 @@
 package data.repository
 
-import data.MuseumApi
-import data.MuseumStorage
+import data.api.MuseumApi
+import data.Storage.MuseumStorage
 import domain.model.MuseumObject
 import domain.network.NetworkResult
 import domain.repository.Repository
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class MuseumRepository(
     private val museumApi: MuseumApi,
@@ -16,23 +16,21 @@ class MuseumRepository(
 ): Repository{
     private val scope = CoroutineScope(SupervisorJob())
 
-    override suspend fun initialize() : Unit {
-        Napier.e("MuseumRepository - initialize")
-        refresh()
+    fun initialize() : Unit {
+        scope.launch {
+            refresh()
+        }
     }
 
-    override suspend fun refresh() : Unit {
-        Napier.e("MuseumRepository - refresh")
+     private suspend fun refresh() : Unit {
         museumStorage.saveObjects(museumApi.getData())
     }
 
-    override suspend fun getObjects() : NetworkResult<Flow<List<MuseumObject>>> {
-        Napier.e("MuseumRepository - getObjects")
+    override suspend fun getObjects() : NetworkResult<List<MuseumObject>> {
         return NetworkResult.Success(museumStorage.getObjects())
     }
 
     override suspend fun getObjectById(objectId: Int): Flow<MuseumObject?> {
-        Napier.e("MuseumRepository - getObjectById: $objectId")
         return museumStorage.getObjectById(objectId)
     }
 }

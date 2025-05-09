@@ -21,12 +21,13 @@ class ListViewModel(
     private fun loadObjects() {
         viewModelScope.launch {
             userCase.execute(Unit).handleResult(
-                success = { flow: Flow<List<MuseumObject>> ->
+                success = { /*flow: Flow<List<MuseumObject>> ->
                     launch {
                         flow.collect { museumObjects ->
                             _objects.value = museumObjects
                         }
-                    }
+                    }*/
+                    _objects.value = it
                 },
                 error = { throwable ->
                     _objects.value = emptyList()

@@ -28,14 +28,10 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.napier)
-//            implementation("io.github.aakira:napier:2.1.0")
         }
         androidMain.dependencies {
-//            implementation(libs.napier)
-//            implementation("com.jakewharton.timber:timber:5.0.1")
         }
         iosMain.dependencies {
-//            implementation(libs.napier)
         }
     }
 }

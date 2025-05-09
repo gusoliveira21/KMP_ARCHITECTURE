@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         Napier.d("Debug log")
         Napier.i("Info log")
         Napier.w("Warning log")
-        Napier.e("Error log", Throwable("Something went wrong"))
+        Napier.e("Error log", Throwable("Something went wrong: Esse é um teste do Napier"))
 
         setContent {
             LaunchedEffect(isSystemInDarkTheme()) {

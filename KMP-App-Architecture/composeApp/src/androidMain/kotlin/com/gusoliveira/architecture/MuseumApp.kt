@@ -7,7 +7,6 @@ import org.koin.android.BuildConfig
 class MuseumApp : Application() {
     override fun onCreate() {
         super.onCreate()
-
         initKoin()
     }
 }
