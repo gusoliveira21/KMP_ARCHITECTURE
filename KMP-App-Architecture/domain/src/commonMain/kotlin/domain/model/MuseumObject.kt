@@ -1,8 +1,5 @@
-package com.gusoliveira.architecture.data
+package domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class MuseumObject(
     val objectID: Int,
     val title: String,

@@ -14,6 +14,7 @@ import androidx.navigation.toRoute
 import com.gusoliveira.architecture.screens.detail.DetailScreen
 import com.gusoliveira.architecture.screens.list.ListScreen
 import kotlinx.serialization.Serializable
+import io.github.aakira.napier.Napier
 
 @Serializable
 object ListDestination
@@ -23,6 +24,7 @@ data class DetailDestination(val objectId: Int)
 
 @Composable
 fun App() {
+    Napier.e("TESTE - App iniciando")
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {

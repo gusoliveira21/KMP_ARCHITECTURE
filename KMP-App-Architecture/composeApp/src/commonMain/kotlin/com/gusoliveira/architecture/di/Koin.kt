@@ -1,19 +1,25 @@
 package com.gusoliveira.architecture.di
 
-import com.gusoliveira.architecture.data.MuseumApi
-import com.gusoliveira.architecture.data.KtorMuseumApi
-import com.gusoliveira.architecture.data.InMemoryMuseumStorage
-import com.gusoliveira.architecture.data.MuseumRepository
-import com.gusoliveira.architecture.data.MuseumStorage
+import data.MuseumApi
+import data.KtorMuseumApi
+import data.InMemoryMuseumStorage
+import data.repository.MuseumRepository
+import data.MuseumStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import com.gusoliveira.architecture.screens.detail.DetailViewModel
+import domain.repository.Repository
+import domain.usercase.get.GetData
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
 import com.gusoliveira.architecture.screens.list.ListViewModel
 
 val dataModule = module {
@@ -28,23 +34,30 @@ val dataModule = module {
 
     single<MuseumApi> { KtorMuseumApi(get()) }
     single<MuseumStorage> { InMemoryMuseumStorage() }
-    single {
-        MuseumRepository(get(), get()).apply {
-            initialize()
+    single<Repository> { MuseumRepository(get(), get()) }
+    single { GetData(get()) }
+}
+
+val viewModelModule = module {
+    factory { ListViewModel(get()) }
+    factory { DetailViewModel(get()) }
+}
+
+class AppInitializer : KoinComponent {
+    private val repository: Repository by inject()
+
+    fun initKoin() {
+        startKoin {
+            modules(
+                dataModule,
+                viewModelModule,
+            )
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            repository.initialize()
         }
     }
 }
 
-val viewModelModule = module {
-    factoryOf(::ListViewModel)
-    factoryOf(::DetailViewModel)
-}
-
-fun initKoin() {
-    startKoin {
-        modules(
-            dataModule,
-            viewModelModule,
-        )
-    }
-}
+fun initKoin() = AppInitializer().initKoin()

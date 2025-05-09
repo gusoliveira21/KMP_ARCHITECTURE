@@ -25,25 +25,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import com.gusoliveira.architecture.data.MuseumObject
 import com.gusoliveira.architecture.screens.EmptyScreenContent
+import domain.model.MuseumObject
+import io.github.aakira.napier.Napier
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ListScreen(
     navigateToDetails: (objectId: Int) -> Unit
 ) {
-    val viewModel = koinViewModel<ListViewModel>()
+    Napier.e("ListScreen - Composable")
+    val viewModel: ListViewModel = koinViewModel<ListViewModel>()
     val objects by viewModel.objects.collectAsStateWithLifecycle()
 
     AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
         if (objectsAvailable) {
+            Napier.e("ListScreen - Objects available: ${objects.size}")
             ObjectGrid(
                 objects = objects,
                 onObjectClick = navigateToDetails,
             )
         } else {
+            Napier.e("ListScreen - No objects available")
             EmptyScreenContent(Modifier.fillMaxSize())
         }
     }
@@ -55,6 +60,7 @@ private fun ObjectGrid(
     onObjectClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Napier.e("ObjectGrid - Composable")
     LazyVerticalGrid(
         columns = GridCells.Adaptive(180.dp),
         modifier = modifier.fillMaxSize(),
@@ -75,6 +81,7 @@ private fun ObjectFrame(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Napier.e("ObjectFrame - Composable: ${obj.objectID}")
     Column(
         modifier
             .padding(8.dp)

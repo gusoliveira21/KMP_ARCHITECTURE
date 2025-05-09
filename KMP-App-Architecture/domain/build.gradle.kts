@@ -19,34 +19,29 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "Data"
+            baseName = "Domain"
             isStatic = true
         }
     }
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":domain"))
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
 //            implementation(libs.napier)
             implementation("io.github.aakira:napier:2.1.0")
         }
         androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
 //            implementation(libs.napier)
 //            implementation("com.jakewharton.timber:timber:5.0.1")
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
 //            implementation(libs.napier)
-
         }
     }
 }
 
 android {
-    namespace = "com.gusoliveira.architecture.data"
+    namespace = "com.gusoliveira.architecture.domain"
     compileSdk = 35
 
     defaultConfig {
@@ -69,11 +64,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.ktor.client.okhttp)
-
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
