@@ -47,7 +47,7 @@ class AppInitializer : KoinComponent {
     private val repository: Repository by inject()
 
     fun initKoin() {
-        startKoin {
+        startKoin() {
             modules(
                 dataModule,
                 viewModelModule,

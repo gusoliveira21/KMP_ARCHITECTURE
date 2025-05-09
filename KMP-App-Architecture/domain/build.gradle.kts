@@ -27,8 +27,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.ktor.serialization.kotlinx.json)
-//            implementation(libs.napier)
-            implementation("io.github.aakira:napier:2.1.0")
+            implementation(libs.napier)
+//            implementation("io.github.aakira:napier:2.1.0")
         }
         androidMain.dependencies {
 //            implementation(libs.napier)

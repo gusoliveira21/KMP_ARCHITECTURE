@@ -24,7 +24,7 @@ data class DetailDestination(val objectId: Int)
 
 @Composable
 fun App() {
-    Napier.e("TESTE - App iniciando")
+    Napier.e("Napier TESTE - App iniciando")
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {

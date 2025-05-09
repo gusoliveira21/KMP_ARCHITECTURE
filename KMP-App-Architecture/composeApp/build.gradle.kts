@@ -47,8 +47,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":data"))
             implementation(project(":domain"))
-            implementation("io.github.aakira:napier:2.1.0")
-//          implementation(libs.napier)
+            implementation(libs.napier)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

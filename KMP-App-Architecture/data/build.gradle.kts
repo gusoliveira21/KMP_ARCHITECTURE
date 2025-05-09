@@ -29,8 +29,9 @@ kotlin {
             implementation(project(":domain"))
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.napier)
 //            implementation(libs.napier)
-            implementation("io.github.aakira:napier:2.1.0")
+//            implementation("io.github.aakira:napier:2.1.0")
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
