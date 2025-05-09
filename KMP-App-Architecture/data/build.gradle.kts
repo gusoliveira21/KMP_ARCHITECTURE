@@ -29,6 +29,8 @@ kotlin {
             implementation(project(":domain"))
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.napier)
 //            implementation(libs.napier)
 //            implementation("io.github.aakira:napier:2.1.0")
