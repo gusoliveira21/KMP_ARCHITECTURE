@@ -1,5 +1,6 @@
 package com.gusoliveira.architecture.di
 
+import com.gusoliveira.architecture.screens.detail.DetailViewModel
 import data.MuseumApi
 import data.KtorMuseumApi
 import data.InMemoryMuseumStorage
@@ -12,7 +13,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import com.gusoliveira.architecture.screens.detail.DetailViewModel
 import domain.repository.Repository
 import domain.usercase.get.GetData
 import org.koin.core.component.KoinComponent

@@ -16,9 +16,7 @@ class ListViewModel(
     private val _objects = MutableStateFlow<List<MuseumObject>>(emptyList())
     val objects: StateFlow<List<MuseumObject>> = _objects.asStateFlow()
 
-    init {
-        loadObjects()
-    }
+    init { loadObjects() }
 
     private fun loadObjects() {
         viewModelScope.launch {
