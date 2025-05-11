@@ -10,7 +10,6 @@ import io.github.aakira.napier.Napier
 
 @Composable
 fun EmptyScreenContent(modifier: Modifier = Modifier) {
-    Napier.e("EmptyScreenContent - Composable")
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

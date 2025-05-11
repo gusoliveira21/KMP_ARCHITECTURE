@@ -33,16 +33,10 @@ kotlin {
             implementation(libs.androidx.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
-            implementation("io.insert-koin:koin-android:3.1.0") // Koin para Android
-
-//            implementation(libs.napier)
-//            implementation("org.slf4j:slf4j-android:1.7.36")
-//            implementation("com.jakewharton.timber:timber:5.0.1")
+            implementation(libs.koin.android)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-//            implementation(libs.napier)
-
         }
         commonMain.dependencies {
             implementation(project(":data"))

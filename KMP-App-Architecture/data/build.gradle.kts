@@ -32,17 +32,12 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.napier)
-//            implementation(libs.napier)
-//            implementation("io.github.aakira:napier:2.1.0")
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
-//            implementation(libs.napier)
-//            implementation("com.jakewharton.timber:timber:5.0.1")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-//            implementation(libs.napier)
 
         }
     }

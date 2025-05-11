@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.gusoliveira.architecture.screens.EmptyScreenContent
 import domain.model.MuseumObject
-import io.github.aakira.napier.Napier
 import kmp_app_architecture.composeapp.generated.resources.Res
 import kmp_app_architecture.composeapp.generated.resources.back
 import kmp_app_architecture.composeapp.generated.resources.label_artist
@@ -49,24 +48,19 @@ fun DetailScreen(
     objectId: Int,
     navigateBack: () -> Unit,
 ) {
-    Napier.e("DetailScreen - Composable: $objectId")
     val viewModel = koinViewModel<DetailViewModel>()
     var obj by remember { mutableStateOf<MuseumObject?>(null) }
 
     LaunchedEffect(objectId) {
-        Napier.e("DetailScreen - LaunchedEffect: $objectId")
         viewModel.getObject(objectId).collect { result ->
-            Napier.e("DetailScreen - Object collected: ${result?.objectID}")
             obj = result
         }
     }
 
     AnimatedContent(obj != null) { objectAvailable ->
         if (objectAvailable) {
-            Napier.e("DetailScreen - Object available: ${obj?.objectID}")
             ObjectDetails(obj!!, onBackClick = navigateBack)
         } else {
-            Napier.e("DetailScreen - No object available")
             EmptyScreenContent(Modifier.fillMaxSize())
         }
     }
@@ -79,7 +73,6 @@ private fun ObjectDetails(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Napier.e("ObjectDetails - Composable: ${obj.objectID}")
     Scaffold(
         topBar = {
             TopAppBar(
