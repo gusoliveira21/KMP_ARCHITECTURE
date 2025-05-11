@@ -6,17 +6,19 @@ import domain.repository.Repository
 import domain.usercase.base.BaseUseCase
 import domain.usercase.base.DataResult
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.Flow
 
-class GetData(private val repository: Repository) : BaseUseCase<Unit, List<MuseumObject>>() {
+class GetData(private val repository: Repository) : BaseUseCase<Unit, Flow<List<MuseumObject>>>() {
 
-    override suspend fun doWork(value: Unit): DataResult<List<MuseumObject>> {
-        Napier.e("GetData - doWork")
+    override suspend fun doWork(value: Unit): DataResult<Flow<List<MuseumObject>>> {
+        Napier.e("GetData - doWork - Iniciando")
 
         return try {
+            // Primeiro faz o refresh dos dados
             when (val response = repository.getObjects()) {
                 is NetworkResult.Success -> {
-                    Napier.e("GetData - Success \n ${response.data}")
-                    DataResult.Success(response.data)
+                    Napier.e("GetData - Success - Dados atualizados")
+                    DataResult.Success(repository.getObjectsFlow())
                 }
                 is NetworkResult.Error -> {
                     Napier.e("GetData - Error: ${response.body?.error}")

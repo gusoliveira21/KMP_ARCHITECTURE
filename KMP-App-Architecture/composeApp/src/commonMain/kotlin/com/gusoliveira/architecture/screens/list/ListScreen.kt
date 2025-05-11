@@ -1,8 +1,13 @@
 package com.gusoliveira.architecture.screens.list
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,13 +18,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -39,17 +47,41 @@ fun ListScreen(
     val viewModel: ListViewModel = koinViewModel<ListViewModel>()
     val objects by viewModel.objects.collectAsStateWithLifecycle()
 
-    AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
-        if (objectsAvailable) {
-            Napier.e("ListScreen - Objects available: ${objects.size}")
-            ObjectGrid(
-                objects = objects,
-                onObjectClick = navigateToDetails,
-            )
-        } else {
-            Napier.e("ListScreen - No objects available")
-            EmptyScreenContent(Modifier.fillMaxSize())
+    Box(modifier = Modifier.fillMaxSize()) {
+        AnimatedContent(
+            targetState = objects,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(300)) togetherWith
+                fadeOut(animationSpec = tween(300))
+            },
+            label = "ListScreenContent"
+        ) { currentObjects ->
+            when {
+                currentObjects.isEmpty() -> {
+                    LoadingContent()
+                }
+                else -> {
+                    Napier.e("ListScreen - Objects available: ${currentObjects.size}")
+                    ObjectGrid(
+                        objects = currentObjects,
+                        onObjectClick = navigateToDetails,
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun LoadingContent() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(48.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 

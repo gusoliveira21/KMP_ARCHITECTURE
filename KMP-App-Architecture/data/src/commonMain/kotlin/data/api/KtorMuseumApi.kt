@@ -1,0 +1,42 @@
+package data.api
+
+import domain.model.MuseumObject
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
+import io.github.aakira.napier.Napier
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
+import kotlin.coroutines.cancellation.CancellationException
+
+class KtorMuseumApi(private val client: HttpClient) : MuseumApi {
+    companion object {
+        private const val API_URL =
+            "https://raw.githubusercontent.com/Kotlin/KMP-App-Template/main/list.json"
+    }
+
+    override suspend fun getData(): List<MuseumObject> {
+        return try {
+            Napier.e("KtorMuseumApi - Iniciando requisição para URL: $API_URL")
+            val response = client.get(API_URL) {
+                header(HttpHeaders.Accept, "application/json")
+            }
+            
+            Napier.e("KtorMuseumApi - Resposta recebida, iniciando deserialização")
+            val jsonString = response.body<String>()
+            val objects = Json.decodeFromString<List<MuseumObject>>(jsonString)
+            Napier.e("KtorMuseumApi - Deserialização concluída: ${objects.size} objetos")
+            objects
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                Napier.e("KtorMuseumApi - Requisição cancelada")
+                throw e
+            }
+            Napier.e("KtorMuseumApi - Erro na requisição: ${e.message}")
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+}
