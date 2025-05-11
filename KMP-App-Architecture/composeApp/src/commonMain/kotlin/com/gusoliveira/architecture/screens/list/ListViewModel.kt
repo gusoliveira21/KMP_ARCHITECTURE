@@ -18,19 +18,15 @@ class ListViewModel(
     val objects: StateFlow<List<MuseumObject>> = _objects.asStateFlow()
 
     init { 
-        Napier.e("ListViewModel - Inicializando ViewModel")
-        loadObjects() 
+        loadObjects()
     }
 
     private fun loadObjects() {
-        Napier.e("ListViewModel - Iniciando carregamento de objetos")
         viewModelScope.launch {
             userCase.execute(Unit).handleResult(
                 success = { flow ->
-                    Napier.e("ListViewModel - Flow recebido, iniciando coleta")
                     launch {
                         flow.collect { museumObjects ->
-                            Napier.e("ListViewModel - Novos objetos recebidos: ${museumObjects.size}")
                             _objects.value = museumObjects
                         }
                     }

@@ -19,22 +19,16 @@ class KtorMuseumApi(private val client: HttpClient) : MuseumApi {
 
     override suspend fun getData(): List<MuseumObject> {
         return try {
-            Napier.e("KtorMuseumApi - Iniciando requisição para URL: $API_URL")
             val response = client.get(API_URL) {
                 header(HttpHeaders.Accept, "application/json")
             }
-            
-            Napier.e("KtorMuseumApi - Resposta recebida, iniciando deserialização")
             val jsonString = response.body<String>()
             val objects = Json.decodeFromString<List<MuseumObject>>(jsonString)
-            Napier.e("KtorMuseumApi - Deserialização concluída: ${objects.size} objetos")
             objects
         } catch (e: Exception) {
             if (e is CancellationException) {
-                Napier.e("KtorMuseumApi - Requisição cancelada")
                 throw e
             }
-            Napier.e("KtorMuseumApi - Erro na requisição: ${e.message}")
             e.printStackTrace()
             emptyList()
         }
