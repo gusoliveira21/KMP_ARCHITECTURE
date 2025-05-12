@@ -1,10 +1,10 @@
-# KMP App Architecture
+# Mobile App com MVVM + Modularização
 
 ## Visão Geral da Arquitetura
-Esta arquitetura foi projetada especificamente para projetos Kotlin Multiplatform (KMP) que necessitam de uma base sólida, escalável e testável. Ela combina os princípios da Clean Architecture com as melhores práticas de desenvolvimento mobile multiplataforma.
+Esta arquitetura foi projetada especificamente para projetos Mobile que necessitam de uma base sólida, escalável e testável. Ela combina os princípios da Clean Architecture com as melhores práticas de desenvolvimento mobile.
 
 ## Quando Usar Esta Arquitetura
-- Projetos que precisam compartilhar código entre Android e iOS
+- Projetos que precisam compartilhar código entre Android e iOS ou somente Android ou iOS
 - Aplicações que requerem alta testabilidade
 - Sistemas que precisam de uma clara separação de responsabilidades
 - Projetos que podem crescer em complexidade ao longo do tempo
@@ -12,7 +12,7 @@ Esta arquitetura foi projetada especificamente para projetos Kotlin Multiplatfor
 
 ## Tempo de Implementação
 - **Setup Inicial**: 2-3 dias
-  - Configuração do projeto KMP
+  - Configuração do projeto
   - Estruturação das camadas
   - Configuração de dependências básicas
 
@@ -53,7 +53,7 @@ Esta arquitetura foi projetada especificamente para projetos Kotlin Multiplatfor
 - Cache inteligente
 - Tratamento de erros centralizado
 
-### 3. Camada de Apresentação (Presentation)
+### 3. Camada de Apresentação (composeApp)
 **Responsabilidade**: Gerencia a interface do usuário e estado da tela.
 
 **Componentes**:
@@ -93,6 +93,14 @@ Esta arquitetura foi projetada especificamente para projetos Kotlin Multiplatfor
 UI (Compose) → ViewModel → UseCase → Repository → DataSource
 ```
 
+### Modelo simples: 
+
+   <img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/4ee16c99d73a671a21bd43ca86fdf8a39903071c/Doc/arch_simple.svg' width='30%'>
+ 
+### Modelo detalhado:
+   <img src='https://github.com/user-attachments/assets/830df625-6224-4707-a682-9cefc854c646' width='90%'>
+
+
 ## Vantagens da Arquitetura
 
 ### 1. Manutenibilidade
@@ -127,4 +135,4 @@ UI (Compose) → ViewModel → UseCase → Repository → DataSource
 - Koin
 
 ## Conclusão
-Esta arquitetura é ideal para projetos KMP que necessitam de uma base sólida e escalável. Ela oferece um equilíbrio entre complexidade inicial e benefícios a longo prazo, sendo especialmente útil em projetos que precisam de manutenção contínua e evolução constante.
+Esta arquitetura é ideal para projetos que necessitam de uma base sólida e escalável. Ela oferece um equilíbrio entre complexidade inicial e benefícios a longo prazo, sendo especialmente útil em projetos que precisam de manutenção contínua e evolução constante.
