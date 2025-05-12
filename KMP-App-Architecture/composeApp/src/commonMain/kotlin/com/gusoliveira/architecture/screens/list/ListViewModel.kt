@@ -3,16 +3,15 @@ package com.gusoliveira.architecture.screens.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import domain.model.MuseumObject
-import domain.usercase.get.GetData
+import domain.usercase.get.GetObjectsFlowUserCase
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ListViewModel(
-    private val userCase: GetData
+    private val userCase: GetObjectsFlowUserCase
 ) : ViewModel() {
     private val _objects = MutableStateFlow<List<MuseumObject>>(emptyList())
     val objects: StateFlow<List<MuseumObject>> = _objects.asStateFlow()

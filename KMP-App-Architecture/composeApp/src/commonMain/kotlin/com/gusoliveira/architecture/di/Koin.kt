@@ -2,7 +2,7 @@ package com.gusoliveira.architecture.di
 
 import com.gusoliveira.architecture.screens.detail.DetailViewModel
 import data.api.MuseumApi
-import com.gusoliveira.architecture.KtorMuseumApi
+import com.gusoliveira.architecture.api.KtorMuseumApi
 import data.Storage.InMemoryMuseumStorage
 import data.Storage.MuseumStorage
 import io.ktor.client.HttpClient
@@ -12,10 +12,11 @@ import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import domain.repository.Repository
-import domain.usercase.get.GetData
+import domain.usercase.get.GetObjectsFlowUserCase
 import org.koin.core.component.KoinComponent
 import com.gusoliveira.architecture.screens.list.ListViewModel
 import data.repository.MuseumRepository
+import domain.usercase.get.GetObjectByIdUserCase
 
 val dataModule = module {
     single {
@@ -33,7 +34,8 @@ val dataModule = module {
     single<MuseumStorage> { InMemoryMuseumStorage() }
     single<MuseumApi> { KtorMuseumApi(get()) }
     single<Repository> { MuseumRepository(get(), get()).apply { initialize() } }
-    single { GetData(get()) }
+    single { GetObjectsFlowUserCase(get()) }
+    single { GetObjectByIdUserCase(get()) }
 }
 
 val viewModelModule = module {

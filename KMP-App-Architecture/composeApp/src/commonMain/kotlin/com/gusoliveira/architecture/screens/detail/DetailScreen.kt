@@ -55,6 +55,7 @@ fun DetailScreen(
         viewModel.getObject(objectId).collect { result ->
             obj = result
         }
+        obj = viewModel.obj.value
     }
 
     AnimatedContent(obj != null) { objectAvailable ->

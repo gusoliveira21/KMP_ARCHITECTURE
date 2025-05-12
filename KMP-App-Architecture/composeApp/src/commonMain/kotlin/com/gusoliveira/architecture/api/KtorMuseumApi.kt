@@ -1,4 +1,4 @@
-package com.gusoliveira.architecture
+package com.gusoliveira.architecture.api
 
 import data.api.MuseumApi
 import domain.model.MuseumObject

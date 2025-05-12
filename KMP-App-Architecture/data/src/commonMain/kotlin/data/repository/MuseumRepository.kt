@@ -3,6 +3,7 @@ package data.repository
 import data.api.MuseumApi
 import data.Storage.MuseumStorage
 import domain.model.MuseumObject
+import domain.network.ErrorBody
 import domain.network.NetworkResult
 import domain.repository.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -31,43 +32,35 @@ class MuseumRepository(
             museumStorage.saveObjects(newObjects)
             _objectsFlow.value = newObjects
         } catch (e: Exception) {
-            // Em caso de erro, tenta recuperar do storage
             val storedObjects = museumStorage.getObjects()
             _objectsFlow.value = storedObjects
         }
     }
 
-    override suspend fun getObjects() : NetworkResult<List<MuseumObject>> {
-        return try {
-            val newObjects = museumApi.getData()
-            museumStorage.saveObjects(newObjects)
-            _objectsFlow.value = newObjects
-            
-            NetworkResult.Success(newObjects)
-        } catch (e: Exception) {
-            val storedObjects = museumStorage.getObjects()
-            _objectsFlow.value = storedObjects
-            NetworkResult.Success(storedObjects)
-        }
-    }
-
-    override fun getObjectsFlow(): Flow<List<MuseumObject>> {
-        // Se o flow estiver vazio, tenta carregar do storage
+    override fun getObjectsFlow(): NetworkResult<Flow<List<MuseumObject>>> {
         if (_objectsFlow.value.isEmpty()) {
             scope.launch {
                 val storedObjects = museumStorage.getObjects()
                 if (storedObjects.isNotEmpty()) {
                     _objectsFlow.value = storedObjects
                 } else {
-                    // Se não houver dados no storage, tenta buscar da API
                     refresh()
                 }
             }
         }
-        return _objectsFlow.asStateFlow()
+        return NetworkResult.Success(_objectsFlow.asStateFlow())
     }
 
-    override suspend fun getObjectById(objectId: Int): Flow<MuseumObject?> {
-        return museumStorage.getObjectById(objectId)
+    override suspend fun getObjectById(objectId: Int): NetworkResult<Flow<MuseumObject?>> {
+
+        return try {
+            val obj = museumStorage.getObjectById(objectId)
+            NetworkResult.Success(obj)
+        } catch (e: Exception) {
+            NetworkResult.Exception(e)
+        }
+        catch (e: Error) {
+            NetworkResult.Error(e.hashCode(), e.message?.let { ErrorBody(it) })
+        }
     }
 }
