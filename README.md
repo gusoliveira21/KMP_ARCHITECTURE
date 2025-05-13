@@ -19,6 +19,9 @@ composeApp/
 ```
 UI (Compose) → ViewModel → UseCase → Repository → DataSource
 ```
+### Modelo
+   <img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/2f6669ce1821ba52684ef19eeff5f9cabefc8dc7/Doc/arch_unit_modulo.svg' width='70%'>
+
 
 ## Tecnologias Principais
 - Kotlin Multiplatform
