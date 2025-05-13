@@ -10,17 +10,6 @@ Esta arquitetura foi projetada especificamente para projetos Mobile que necessit
 - Projetos que podem crescer em complexidade ao longo do tempo
 - Aplicações que necessitam de manutenção a longo prazo
 
-## Tempo de Implementação
-- **Setup Inicial**: ? dias
-  - Configuração do projeto
-  - Estruturação das camadas
-  - Configuração de dependências básicas
-
-- **Implementação por Feature**: ? dias
-  - Desenvolvimento do domínio
-  - Implementação da camada de dados
-  - Desenvolvimento da UI
-
 ## Estrutura da Arquitetura
 
 ### 1. Camada de Domínio (Domain)
