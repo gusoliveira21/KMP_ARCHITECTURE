@@ -1,10 +1,10 @@
 package com.gusoliveira.architecture.di
 
-import com.gusoliveira.architecture.data.MuseumApi
-import com.gusoliveira.architecture.data.KtorMuseumApi
-import com.gusoliveira.architecture.data.InMemoryMuseumStorage
+import com.gusoliveira.architecture.data.IMuseumApi
+import com.gusoliveira.architecture.data.KtorIMuseumApi
+import com.gusoliveira.architecture.data.InMemoryIMuseumStorage
 import com.gusoliveira.architecture.data.MuseumRepository
-import com.gusoliveira.architecture.data.MuseumStorage
+import com.gusoliveira.architecture.data.IMuseumStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
@@ -27,8 +27,8 @@ val dataModule = module {
         }
     }
 
-    single<MuseumApi> { KtorMuseumApi(get()) }
-    single<MuseumStorage> { InMemoryMuseumStorage() }
+    single<IMuseumApi> { KtorIMuseumApi(get()) }
+    single<IMuseumStorage> { InMemoryIMuseumStorage() }
     single {
         MuseumRepository(get(), get()).apply {
             initialize()

@@ -4,15 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
-interface MuseumStorage {
-    suspend fun saveObjects(newObjects: List<MuseumObject>)
-
-    fun getObjectById(objectId: Int): Flow<MuseumObject?>
-
-    fun getObjects(): Flow<List<MuseumObject>>
-}
-
-class InMemoryMuseumStorage : MuseumStorage {
+class InMemoryIMuseumStorage : IMuseumStorage {
     private val storedObjects = MutableStateFlow(emptyList<MuseumObject>())
 
     override suspend fun saveObjects(newObjects: List<MuseumObject>) {

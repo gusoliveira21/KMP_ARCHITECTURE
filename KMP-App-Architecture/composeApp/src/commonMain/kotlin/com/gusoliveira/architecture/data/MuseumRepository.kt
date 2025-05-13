@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class MuseumRepository(
-    private val museumApi: MuseumApi,
-    private val museumStorage: MuseumStorage,
+    private val IMuseumApi: IMuseumApi,
+    private val IMuseumStorage: IMuseumStorage,
 ) {
     private val scope = CoroutineScope(SupervisorJob())
 
@@ -18,10 +18,10 @@ class MuseumRepository(
     }
 
     suspend fun refresh() {
-        museumStorage.saveObjects(museumApi.getData())
+        IMuseumStorage.saveObjects(IMuseumApi.getData())
     }
 
-    fun getObjects(): Flow<List<MuseumObject>> = museumStorage.getObjects()
+    fun getObjects(): Flow<List<MuseumObject>> = IMuseumStorage.getObjects()
 
-    fun getObjectById(objectId: Int): Flow<MuseumObject?> = museumStorage.getObjectById(objectId)
+    fun getObjectById(objectId: Int): Flow<MuseumObject?> = IMuseumStorage.getObjectById(objectId)
 }

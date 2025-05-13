@@ -1,0 +1,413 @@
+=== App.kt ===
+package com.gusoliveira.architecture
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.gusoliveira.architecture.screens.detail.DetailScreen
+import com.gusoliveira.architecture.screens.list.ListScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+object ListDestination
+
+@Serializable
+data class DetailDestination(val objectId: Int)
+
+@Composable
+fun App() {
+    MaterialTheme(
+        colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+    ) {
+        Surface {
+            val navController: NavHostController = rememberNavController()
+            NavHost(navController = navController, startDestination = ListDestination) {
+                composable<ListDestination> {
+                    ListScreen(navigateToDetails = { objectId ->
+                        navController.navigate(DetailDestination(objectId))
+                    })
+                }
+                composable<DetailDestination> { backStackEntry ->
+                    DetailScreen(
+                        objectId = backStackEntry.toRoute<DetailDestination>().objectId,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+=== MuseumApi.kt ===
+package com.gusoliveira.architecture.data
+
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.utils.io.CancellationException
+
+interface MuseumApi {
+    suspend fun getData(): List<MuseumObject>
+}
+
+class KtorMuseumApi(private val client: HttpClient) : MuseumApi {
+    companion object {
+        private const val API_URL =
+            "https://raw.githubusercontent.com/Kotlin/KMP-App-Template/main/list.json"
+    }
+
+    override suspend fun getData(): List<MuseumObject> {
+        return try {
+            client.get(API_URL).body()
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            e.printStackTrace()
+
+            emptyList()
+        }
+    }
+}
+
+=== MuseumObject.kt ===
+package com.gusoliveira.architecture.data
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class MuseumObject(
+    @SerialName("objectID")
+    val objectID: Int,
+    val title: String,
+    @SerialName("primaryImageSmall")
+    val primaryImageSmall: String,
+    @SerialName("artistDisplayName")
+    val artistDisplayName: String,
+    @SerialName("objectDate")
+    val objectDate: String,
+)
+
+=== MuseumRepository.kt ===
+package com.gusoliveira.architecture.data
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+
+class MuseumRepository(
+    private val museumApi: MuseumApi,
+    private val museumStorage: MuseumStorage,
+) {
+    private val scope = CoroutineScope(SupervisorJob())
+
+    fun initialize() {
+        scope.launch {
+            refresh()
+        }
+    }
+
+    suspend fun refresh() {
+        museumStorage.saveObjects(museumApi.getData())
+    }
+
+    fun getObjects(): Flow<List<MuseumObject>> = museumStorage.getObjects()
+
+    fun getObjectById(objectId: Int): Flow<MuseumObject?> = museumStorage.getObjectById(objectId)
+}
+
+=== MuseumStorage.kt ===
+package com.gusoliveira.architecture.data
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+
+interface MuseumStorage {
+    suspend fun saveObjects(newObjects: List<MuseumObject>)
+
+    fun getObjectById(objectId: Int): Flow<MuseumObject?>
+
+    fun getObjects(): Flow<List<MuseumObject>>
+}
+
+class InMemoryMuseumStorage : MuseumStorage {
+    private val storedObjects = MutableStateFlow(emptyList<MuseumObject>())
+
+    override suspend fun saveObjects(newObjects: List<MuseumObject>) {
+        storedObjects.value = newObjects
+    }
+
+    override fun getObjectById(objectId: Int): Flow<MuseumObject?> {
+        return storedObjects.map { objects ->
+            objects.find { it.objectID == objectId }
+        }
+    }
+
+    override fun getObjects(): Flow<List<MuseumObject>> = storedObjects
+}
+
+=== ListScreen.kt ===
+package com.gusoliveira.architecture.screens.list
+
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import com.gusoliveira.architecture.data.MuseumObject
+import com.gusoliveira.architecture.screens.EmptyScreenContent
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun ListScreen(
+    navigateToDetails: (objectId: Int) -> Unit
+) {
+    val viewModel = koinViewModel<ListViewModel>()
+    val objects by viewModel.objects.collectAsStateWithLifecycle()
+
+    AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
+        if (objectsAvailable) {
+            ObjectGrid(
+                objects = objects,
+                onObjectClick = navigateToDetails,
+            )
+        } else {
+            EmptyScreenContent(Modifier.fillMaxSize())
+        }
+    }
+}
+
+@Composable
+private fun ObjectGrid(
+    objects: List<MuseumObject>,
+    onObjectClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(180.dp),
+        modifier = modifier.fillMaxSize(),
+        contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
+    ) {
+        items(objects, key = { it.objectID }) { obj ->
+            ObjectFrame(
+                obj = obj,
+                onClick = { onObjectClick(obj.objectID) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ObjectFrame(
+    obj: MuseumObject,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier
+            .padding(8.dp)
+            .clickable { onClick() }
+    ) {
+        AsyncImage(
+            model = obj.primaryImageSmall,
+            contentDescription = obj.title,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .background(Color.LightGray),
+        )
+
+        Spacer(Modifier.height(2.dp))
+
+        Text(obj.title, style = MaterialTheme.typography.titleMedium)
+        Text(obj.artistDisplayName, style = MaterialTheme.typography.bodyMedium)
+        Text(obj.objectDate, style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+=== ListViewModel.kt ===
+package com.gusoliveira.architecture.screens.list
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gusoliveira.architecture.data.MuseumRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
+class ListViewModel : ViewModel(), KoinComponent {
+    private val museumRepository: MuseumRepository by inject()
+
+    val objects = museumRepository.getObjects()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    init {
+        museumRepository.initialize()
+    }
+}
+
+=== DetailScreen.kt ===
+package com.gusoliveira.architecture.screens.detail
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailScreen(
+    objectId: Int,
+    navigateBack: () -> Unit,
+) {
+    val viewModel = koinViewModel<DetailViewModel>()
+    val museumObject by viewModel.museumObject.collectAsStateWithLifecycle()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(museumObject?.title ?: "") },
+                navigationIcon = {
+                    IconButton(onClick = navigateBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        museumObject?.let { obj ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(WindowInsets.safeDrawing.asPaddingValues())
+                    .verticalScroll(rememberScrollState())
+            ) {
+                AsyncImage(
+                    model = obj.primaryImageSmall,
+                    contentDescription = obj.title,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Column(Modifier.padding(16.dp)) {
+                    Text(obj.title, style = MaterialTheme.typography.headlineMedium)
+                    Text(obj.artistDisplayName, style = MaterialTheme.typography.titleMedium)
+                    Text(obj.objectDate, style = MaterialTheme.typography.bodyLarge)
+                }
+            }
+        }
+    }
+}
+
+=== DetailViewModel.kt ===
+package com.gusoliveira.architecture.screens.detail
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gusoliveira.architecture.data.MuseumRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
+class DetailViewModel(
+    private val objectId: Int
+) : ViewModel(), KoinComponent {
+    private val museumRepository: MuseumRepository by inject()
+
+    val museumObject = museumRepository.getObjectById(objectId)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+}
+
+=== EmptyScreenContent.kt ===
+package com.gusoliveira.architecture.screens
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+
+@Composable
+fun EmptyScreenContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "No items available",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+} 
