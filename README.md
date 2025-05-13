@@ -11,12 +11,12 @@ Esta arquitetura foi projetada especificamente para projetos Mobile que necessit
 - Aplicações que necessitam de manutenção a longo prazo
 
 ## Tempo de Implementação
-- **Setup Inicial**: 2-3 dias
+- **Setup Inicial**: ? dias
   - Configuração do projeto
   - Estruturação das camadas
   - Configuração de dependências básicas
 
-- **Implementação por Feature**: 3-5 dias
+- **Implementação por Feature**: ? dias
   - Desenvolvimento do domínio
   - Implementação da camada de dados
   - Desenvolvimento da UI
