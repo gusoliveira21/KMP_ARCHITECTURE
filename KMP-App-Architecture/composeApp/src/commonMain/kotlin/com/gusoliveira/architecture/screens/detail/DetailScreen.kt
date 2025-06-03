@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +34,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.gusoliveira.architecture.controller.DetailController
 import com.gusoliveira.architecture.data.MuseumObject
 import com.gusoliveira.architecture.screens.EmptyScreenContent
 import kmp_app_architecture.composeapp.generated.resources.Res
@@ -48,16 +49,16 @@ import kmp_app_architecture.composeapp.generated.resources.label_medium
 import kmp_app_architecture.composeapp.generated.resources.label_repository
 import kmp_app_architecture.composeapp.generated.resources.label_title
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun DetailScreen(
     objectId: Int,
     navigateBack: () -> Unit,
 ) {
-    val viewModel = koinViewModel<DetailViewModel>()
+    val controller = koinInject<DetailController>()
+    val obj by controller.getObjectById(objectId).collectAsState(initial = null)
 
-    val obj by viewModel.getObject(objectId).collectAsStateWithLifecycle(initialValue = null)
     AnimatedContent(obj != null) { objectAvailable ->
         if (objectAvailable) {
             ObjectDetails(obj!!, onBackClick = navigateBack)

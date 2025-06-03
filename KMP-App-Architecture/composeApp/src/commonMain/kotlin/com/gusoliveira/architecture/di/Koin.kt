@@ -1,5 +1,7 @@
 package com.gusoliveira.architecture.di
 
+import com.gusoliveira.architecture.controller.DetailController
+import com.gusoliveira.architecture.controller.ListController
 import com.gusoliveira.architecture.data.IMuseumApi
 import com.gusoliveira.architecture.data.KtorIMuseumApi
 import com.gusoliveira.architecture.data.InMemoryIMuseumStorage
@@ -11,17 +13,13 @@ import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import com.gusoliveira.architecture.screens.detail.DetailViewModel
-import com.gusoliveira.architecture.screens.list.ListViewModel
 
 val dataModule = module {
     single {
         val json = Json { ignoreUnknownKeys = true }
         HttpClient {
             install(ContentNegotiation) {
-                // TODO Fix API so it serves application/json
                 json(json, contentType = ContentType.Any)
             }
         }
@@ -34,18 +32,15 @@ val dataModule = module {
             initialize()
         }
     }
-}
 
-val viewModelModule = module {
-    factoryOf(::ListViewModel)
-    factoryOf(::DetailViewModel)
+    factory { ListController(get()) }
+    factory { DetailController(get()) }
 }
 
 fun initKoin() {
     startKoin {
         modules(
             dataModule,
-            viewModelModule,
         )
     }
 }
