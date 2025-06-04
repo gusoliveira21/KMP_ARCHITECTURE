@@ -1,83 +1,89 @@
-# Mobile App com MVVM (Unimodular)
+# Mobile App com MVC (Unimodular)
 
-## Visão Geral
-Arquitetura MVVM unimodular para aplicações mobile usando Kotlin Multiplatform, focada no módulo composeApp. Ideal para projetos que necessitam de uma base sólida, escalável e testável.
+## 🧠 O que é este projeto?
+Este é um aplicativo mobile feito com **Kotlin Multiplatform** usando a arquitetura **MVC (Model-View-Controller)**. Ele foi projetado para funcionar em Android e iOS, com **Jetpack Compose** na interface e **Ktor + armazenamento em memória** na camada de dados.
 
-## Estrutura do Projeto
+---
+
+## 📦 Como o projeto está organizado?
+
 ```
 composeApp/
-├── src/
-│   ├── commonMain/
-│   │   ├── domain/      # Regras de negócio e modelos
-│   │   ├── data/        # Repositórios e fontes de dados
-│   │   └── presentation/# UI e ViewModels
-│   ├── androidMain/
-│   └── iosMain/
+├── data/        → MODELO (dados e lógica de negócio)
+├── controller/  → CONTROLLER (liga View e Model)
+└── screens/     → VIEW (interface que o usuário vê)
 ```
 
-## Fluxo de Dados
+### Explicando:
+- **Model (dados)**: onde estão os dados da aplicação, como `MuseumObject`, e também os repositórios (`MuseumRepository`).
+- **View (telas)**: são as telas que o usuário vê, como `ListScreen` e `DetailScreen`, escritas com Compose.
+- **Controller (lógica)**: recebe ações da View e decide o que fazer (ex: buscar dados do repositório).
+
+---
+
+## 🔄 Como o fluxo funciona?
+
 ```
-UI (Compose) → ViewModel → UseCase → Repository → DataSource
+Usuário → Tela (View) → Controller → Repositório → API ou Armazenamento → Dados (Model)
 ```
-### Modelo
-   <img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/2f6669ce1821ba52684ef19eeff5f9cabefc8dc7/Doc/arch_unit_modulo.svg' width='70%'>
+
+### Exemplo real:
+1. O usuário abre a tela de lista.
+2. A `ListScreen` chama o `ListController`.
+3. O `ListController` pede dados ao `MuseumRepository`.
+4. O repositório busca os dados da memória ou da internet.
+5. O resultado volta para a `ListScreen`, que mostra ao usuário.
+
+---
+
+## 📊 Diagrama de Classes (UML)
+Representa as estruturas principais do projeto, como classes, atributos e heranças.
+
+<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/MVVM-Arquitetura-MVC/Doc/uml.png' width='70%'>
+
+---
+
+## 🔁 Diagrama de Fluxo (Flowchart)
+Mostra o caminho que os dados percorrem entre as camadas:
+
+### Modelo detalhado:
+<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/MVVM-Arquitetura-MVC/Doc/flowChart.png' width='70%'>
 
 
-## Tecnologias Principais
-- Kotlin Multiplatform
-- Jetpack Compose
-- Kotlin Coroutines & Flow
-- Ktor Client
-- Koin
-- SQLDelight
-- DataStore
+---
 
-## Padrões de Design
-- **MVVM**: Separação UI/lógica, gerenciamento de estado via StateFlow
-- **Repository**: Abstração de fontes de dados, cache inteligente
-- **UseCase**: Encapsulamento de regras de negócio
-- **Clean Architecture**: Separação em camadas, independência de frameworks
+## 🛠️ Tecnologias Usadas
 
-## Vantagens
-- Código organizado e previsível
-- Fácil manutenção e testabilidade
-- Desenvolvimento ágil
-- Baixo acoplamento
-- Alta coesão
+- **Kotlin Multiplatform**: código compartilhado entre Android e iOS
+- **Jetpack Compose**: UI declarativa
+- **Koin**: injeção de dependência
+- **Ktor Client**: comunicação com a internet
+- **Flow e Coroutines**: reatividade e chamadas assíncronas
+- **Armazenamento em memória**: rápido e leve para protótipos
 
-## Comparativo: Unimodular vs Multimodular
+---
 
-### Unimodular (Este Projeto)
-**Prós**:
-- Setup rápido e simples
-- Menor complexidade
-- Desenvolvimento ágil
-- Ideal para equipes menores
+## ✅ Por que usamos MVC?
 
-**Contras**:
-- Menor isolamento entre camadas
-- Pode ficar complexo em projetos muito grandes
+- **Fácil de entender**
+- **Separação de responsabilidades**
+- **Ótimo para apps com lógica leve**
+- **Perfeito para projetos compartilhados entre plataformas**
 
-### Multimodular
-**Prós**:
-- Maior isolamento entre features
-- Mais escalável para projetos grandes
-- Permite desenvolvimento paralelo
+---
 
-**Contras**:
-- Setup inicial complexo
-- Maior overhead de configuração
-- Curva de aprendizado mais íngreme
+## 🤔 Quando usar esse modelo (unimodular)?
 
-## Quando Usar
-**Escolha Unimodular quando**:
-- Projeto de médio porte
-- Equipe pequena
-- Necessidade de desenvolvimento rápido
-- Foco em simplicidade
+Use quando:
+- O projeto não é muito grande
+- Você quer começar rápido
+- A equipe é pequena
+- Precisa de algo simples e funcional
 
-**Escolha Multimodular quando**:
-- Projeto de grande porte
-- Equipe grande
-- Necessidade de isolamento entre features
-- Desenvolvimento paralelo de features
+---
+
+## 🧩 E se o projeto crescer muito?
+
+Se o projeto ficar maior, você pode:
+- Dividir em **módulos separados** (ex: tela de lista, tela de detalhe, domínio, etc)
+- Criar camadas extras como `services`, `usecases`, ou até voltar para **Clean Architecture**
