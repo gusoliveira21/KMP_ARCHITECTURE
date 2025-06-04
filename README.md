@@ -47,7 +47,7 @@ Representa as estruturas principais do projeto, como classes, atributos e heran√
 Mostra o caminho que os dados percorrem entre as camadas:
 
 ### Modelo detalhado:
-<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/MVVM-Arquitetura-MVC/Doc/flowChart.png' width='70%'>
+<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/MVVM-Arquitetura-MVC/Doc/flowChart.png' width='100%'>
 
 
 ---
