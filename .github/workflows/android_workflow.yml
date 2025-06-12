@@ -8,7 +8,7 @@ on:
       - '**/*.gradle.kts'
       - '**/*.kt'
       - '**/*.java'
-      - '.github/workflows/android-pr.yml'
+      - '.github/workflows/android_workflow.yml'
 
 jobs:
   test:
