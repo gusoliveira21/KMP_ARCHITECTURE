@@ -1,8 +1,8 @@
-name: Android PR Checks
+name: Android CI Checks
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches: [ Arquiterura-MVC ]
     paths:
       - '**/*.gradle'
       - '**/*.gradle.kts'
@@ -36,4 +36,4 @@ jobs:
         
     - name: Run Fastlane
       run: |
-        bundle exec fastlane ci 
+        bundle exec fastlane android_tests 

@@ -15,10 +15,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
-### android run_tests
+### android android_tests
 
 ```sh
-[bundle exec] fastlane android run_tests
+[bundle exec] fastlane android android_tests
 ```
 
 Executa os testes unitários do Android

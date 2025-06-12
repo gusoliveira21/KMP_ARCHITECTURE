@@ -2,7 +2,7 @@ default_platform(:android)
 
 platform :android do
   desc "Executa os testes unitários do Android"
-  lane :run_tests do
+  lane :android_tests do
     gradle(
       task: "test",
       project_dir: ".",
@@ -14,6 +14,6 @@ platform :android do
 
   desc "Executa o pipeline de CI para pull requests"
   lane :ci do
-    run_tests
+    android_tests
   end
 end 
