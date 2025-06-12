@@ -1,0 +1,32 @@
+name: iOS PR Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'iosApp/**'
+      - '.github/workflows/ios-pr.yml'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
+        
+    - name: Install dependencies
+      run: |
+        cd iosApp
+        bundle install
+        
+    - name: Run Fastlane
+      run: |
+        cd iosApp
+        bundle exec fastlane ci 

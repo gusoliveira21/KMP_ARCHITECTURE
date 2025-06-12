@@ -1,0 +1,4 @@
+# Caminho para o arquivo de chave JSON do Google Play Console (opcional)
+json_key_file("") 
+# Substitua pelo seu package name 
+package_name("com.gusoliveira.architecture") 

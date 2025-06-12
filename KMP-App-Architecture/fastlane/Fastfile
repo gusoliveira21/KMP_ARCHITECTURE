@@ -1,0 +1,19 @@
+default_platform(:android)
+
+platform :android do
+  desc "Executa os testes unitários do Android"
+  lane :run_tests do
+    gradle(
+      task: "test",
+      project_dir: ".",
+      properties: {
+        "android.injected.testOnly" => "false"
+      }
+    )
+  end
+
+  desc "Executa o pipeline de CI para pull requests"
+  lane :ci do
+    run_tests
+  end
+end 
