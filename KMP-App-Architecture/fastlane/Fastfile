@@ -3,10 +3,17 @@ lane :android_tests do
     task: "test",
     project_dir: ".",
     properties: {
-      "android.injected.testOnly" => "false"
-    },
-    environment_variables: {
-      "ORG_GRADLE_PROJECT_java_home" => nil
+      "android.injected.testOnly" => "false",
+      "org.gradle.java.home" => ""
     }
   )
 end
+
+# lane :android_tests do
+#   gradle(
+#     task: "test",
+#     project_dir: ".",
+#     properties: {"android.injected.testOnly" => "false"},
+#     environment_variables: {"ORG_GRADLE_PROJECT_java_home" => nil}
+#   )
+# end
