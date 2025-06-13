@@ -55,6 +55,14 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
+        androidTarget {
+            testDependencies {
+                implementation("junit:junit:4.13.2")
+            }
+        }
     }
 }
 
