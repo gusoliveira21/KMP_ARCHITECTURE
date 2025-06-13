@@ -1,19 +1,12 @@
-default_platform(:android)
-
-platform :android do
-  desc "Executa os testes unitários do Android"
-  lane :android_tests do
-    gradle(
-      task: "test",
-      project_dir: ".",
-      properties: {
-        "android.injected.testOnly" => "false"
-      }
-    )
-  end
-
-  desc "Executa o pipeline de CI para pull requests"
-  lane :ci do
-    android_tests
-  end
-end 
+lane :android_tests do
+  gradle(
+    task: "test",
+    project_dir: ".",
+    properties: {
+      "android.injected.testOnly" => "false"
+    },
+    environment_variables: {
+      "ORG_GRADLE_PROJECT_java_home" => nil
+    }
+  )
+end
