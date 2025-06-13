@@ -2,7 +2,7 @@ name: Android CI Checks
 
 on:
   push:
-    branches: [ Arquiterura-MVC ]
+    branches: [ ACTIONS_FASTLANE_MVC ]
     paths:
       - '**/*.gradle'
       - '**/*.gradle.kts'
