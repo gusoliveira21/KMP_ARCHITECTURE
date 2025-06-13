@@ -29,13 +29,11 @@ jobs:
       with:
         ruby-version: '3.2'
         bundler-cache: true
-        
+
     - name: Install dependencies
-      run: |
-        cd KMP_ARCHITECTURE
-        bundle install
-        
+      run: bundle install
+      working-directory: KMP-App-Architecture
+
     - name: Run Fastlane
-      run: |
-        cd KMP_ARCHITECTURE
-        bundle exec fastlane android_tests 
+      run: bundle exec fastlane android_tests
+      working-directory: KMP-App-Architecture
