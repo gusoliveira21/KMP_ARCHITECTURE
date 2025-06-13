@@ -10,11 +10,13 @@ plugins {
 }
 
 kotlin {
-    android()
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    android().compilations.all {
-        kotlinOptions.jvmTarget = "11"
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilations.all {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.JVM_11)
+            }
+        }
     }
 
     listOf(
