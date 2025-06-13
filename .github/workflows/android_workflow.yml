@@ -32,10 +32,10 @@ jobs:
         
     - name: Install dependencies
       run: |
-        cd KMP_ARCHITECTURE
+        cd KMP-App-Architecture
         bundle install
         
     - name: Run Fastlane
       run: |
-        cd KMP_ARCHITECTURE
+        cd KMP-App-Architecture
         bundle exec fastlane android_tests 
