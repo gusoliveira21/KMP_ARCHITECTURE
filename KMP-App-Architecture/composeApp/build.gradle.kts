@@ -10,11 +10,11 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+    android()
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    android().compilations.all {
+        kotlinOptions.jvmTarget = "11"
     }
 
     listOf(
@@ -58,11 +58,6 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
-        androidTarget {
-            testDependencies {
-                implementation("junit:junit:4.13.2")
-            }
-        }
     }
 }
 
@@ -95,4 +90,6 @@ android {
 
 dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
+    testImplementation(kotlin("test"))
+    testImplementation("junit:junit:4.13.2")
 }
