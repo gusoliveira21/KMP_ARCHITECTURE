@@ -87,4 +87,6 @@ android {
 
 dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
+    testImplementation(kotlin("test"))
+    testImplementation("junit:junit:4.13.2")
 }
