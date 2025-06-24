@@ -20,7 +20,7 @@ class ExampleUITest {
     fun testGridAppears() {
         // Verifica se o grid de objetos aparece na tela
         // Aguarda um momento para a UI carregar
-        Thread.sleep(3000)
+        Thread.sleep(3001)
         
         // Verifica se a tela principal está visível
         composeTestRule.onRoot().assertIsDisplayed()
