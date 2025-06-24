@@ -32,12 +32,12 @@ jobs:
         
     - name: Install dependencies
       run: |
-        cd KMP_ARCHITECTURE
+        cd KMP-App-Architecture
         bundle install
         
     - name: Run Fastlane
       run: |
-        cd KMP_ARCHITECTURE
+        cd KMP-App-Architecture
         bundle exec fastlane android_tests
 
   screenshots:
@@ -61,16 +61,16 @@ jobs:
         
     - name: Install dependencies
       run: |
-        cd KMP_ARCHITECTURE
+        cd KMP-App-Architecture
         bundle install
         
     - name: Run Screenshots
       run: |
-        cd KMP_ARCHITECTURE
+        cd KMP-App-Architecture
         bundle exec fastlane screenshots
         
     - name: Upload Screenshots
       uses: actions/upload-artifact@v3
       with:
         name: screenshots
-        path: KMP_ARCHITECTURE/screenshots/ 
+        path: KMP-App-Architecture/screenshots/ 
