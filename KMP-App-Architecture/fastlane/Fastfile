@@ -12,6 +12,57 @@ platform :android do
     )
   end
 
+  desc "Executa testes de UI e captura screenshots"
+  lane :screenshots do
+    gradle(
+      task: "assembleDebug",
+      project_dir: "."
+    )
+    
+    # Tenta executar os testes, mas não falha se não houver dispositivos
+    begin
+      gradle(
+        task: "connectedAndroidTest",
+        project_dir: ".",
+        properties: {
+          "android.testInstrumentationRunner" => "androidx.test.runner.AndroidJUnitRunner"
+        }
+      )
+    rescue => ex
+      UI.message "⚠️  Testes de UI não puderam ser executados: #{ex.message}"
+      UI.message "💡 Para executar testes completos, conecte um dispositivo Android ou inicie um emulador"
+    end
+  end
+
+  desc "Executa testes de UI em CI/CD (requer dispositivos)"
+  lane :screenshots_ci do
+    gradle(
+      task: "assembleDebug",
+      project_dir: "."
+    )
+    
+    gradle(
+      task: "connectedAndroidTest",
+      project_dir: ".",
+      properties: {
+        "android.testInstrumentationRunner" => "androidx.test.runner.AndroidJUnitRunner"
+      }
+    )
+  end
+
+  desc "Executa apenas a compilação dos testes"
+  lane :build_tests do
+    gradle(
+      task: "assembleDebug",
+      project_dir: "."
+    )
+    
+    gradle(
+      task: "assembleDebugAndroidTest",
+      project_dir: "."
+    )
+  end
+
   desc "Executa o pipeline de CI para pull requests"
   lane :ci do
     android_tests

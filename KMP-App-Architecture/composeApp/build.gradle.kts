@@ -68,6 +68,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -89,4 +91,10 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(kotlin("test"))
     testImplementation("junit:junit:4.13.2")
+    
+    // UI Testing dependencies
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
+    androidTestImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
 }

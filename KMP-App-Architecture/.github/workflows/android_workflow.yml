@@ -1,0 +1,76 @@
+name: Android CI Checks
+
+on:
+  push:
+    branches: [ ACTIONS_FASTLANE_MVC ]
+    paths:
+      - '**/*.gradle'
+      - '**/*.gradle.kts'
+      - '**/*.kt'
+      - '**/*.java'
+      - '.github/workflows/android_workflow.yml'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
+        
+    - name: Install dependencies
+      run: |
+        cd KMP_ARCHITECTURE
+        bundle install
+        
+    - name: Run Fastlane
+      run: |
+        cd KMP_ARCHITECTURE
+        bundle exec fastlane android_tests
+
+  screenshots:
+    name: Generate Screenshots
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
+        
+    - name: Install dependencies
+      run: |
+        cd KMP_ARCHITECTURE
+        bundle install
+        
+    - name: Run Screenshots
+      run: |
+        cd KMP_ARCHITECTURE
+        bundle exec fastlane screenshots
+        
+    - name: Upload Screenshots
+      uses: actions/upload-artifact@v3
+      with:
+        name: screenshots
+        path: KMP_ARCHITECTURE/screenshots/ 

@@ -23,6 +23,30 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Executa os testes unitários do Android
 
+### android screenshots
+
+```sh
+[bundle exec] fastlane android screenshots
+```
+
+Executa testes de UI e captura screenshots
+
+### android screenshots_ci
+
+```sh
+[bundle exec] fastlane android screenshots_ci
+```
+
+Executa testes de UI em CI/CD (requer dispositivos)
+
+### android build_tests
+
+```sh
+[bundle exec] fastlane android build_tests
+```
+
+Executa apenas a compilação dos testes
+
 ### android ci
 
 ```sh
