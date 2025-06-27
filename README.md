@@ -39,7 +39,7 @@ Usuário → Tela (View) → Controller → Repositório → API ou Armazenament
 ## 📊 Diagrama de Classes (UML)
 Representa as estruturas principais do projeto, como classes, atributos e heranças.
 
-<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/MVVM-Arquitetura-MVC/Doc/uml.png' width='70%'>
+<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/Arquiterura-MVC/Doc/uml.png' width='70%'>
 
 ---
 
@@ -47,8 +47,7 @@ Representa as estruturas principais do projeto, como classes, atributos e heran�
 Mostra o caminho que os dados percorrem entre as camadas:
 
 ### Modelo detalhado:
-<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/MVVM-Arquitetura-MVC/Doc/flowChart.png' width='100%'>
-
+<img src='https://raw.githubusercontent.com/gusoliveira21/KMP_ARCHITECTURE/refs/heads/Arquiterura-MVC/Doc/flowChart.png' width='100%'>
 
 ---
 
